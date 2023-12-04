@@ -23,7 +23,7 @@ clock = pygame.time.Clock()
 FPS = 30
 
 players = []
-how_many_real_players = 0  # up to 4
+how_many_real_players = 1  # up to 4
 how_many_ai_players = 5
 total_players = how_many_ai_players + how_many_real_players
 who_can_hit = 1 #starts on the first player
@@ -93,12 +93,12 @@ while True:
 
     for index, player in enumerate(players):
         if(player['is_ai'] == True):
-            ai_player = AIPlayer(player['player_angle'], player['player_length'], player['player_width'], WIDTH, HEIGHT, screen, RED if index == who_can_hit else WHITE)
+            ai_player = AIPlayer(player['player_angle'], player['player_length'], player['player_width'], WIDTH, HEIGHT, screen, RED if index == who_can_hit else playercolor[index])
             if(index == who_can_hit):
                 if(index % 2 == 0):
-                    move = ai_player.move_left_towards_ball(ball.ball_pos, ai_player.player_angle, center)
+                    move = ai_player.move_towards_ball(ball.ball_pos, ai_player.player_angle, center)
                 elif(index % 2 == 1):
-                    move = ai_player.move_right_towards_ball(ball.ball_pos, ai_player.player_angle, center)
+                    move = ai_player.move_towards_ball(ball.ball_pos, ai_player.player_angle, center)
 
                 if(move == 'MOVE_RIGHT'):
                     move_right(index)
@@ -133,9 +133,10 @@ while True:
         who_can_hit = (who_can_hit + 1) % (how_many_real_players + how_many_ai_players) 
 
     if(is_out):
-        ball_direction = random.choice([[-3, -3], [3, 3], [-3, 3], [3, -3]])
+        ball_direction = random.choice([[-3, -3], [3, 3], [-3, 3], [3, -3], [0, .5], [.5, 0], [0, -.5], [-.5, 0]])
         ball_speed = ball_direction
         hit_count = 0
+        who_can_hit = (who_can_hit + 1) % (how_many_real_players + how_many_ai_players)
 
     # Display hit count
     hit_count_text = font20.render(f"Hit Count: {hit_count}", True, WHITE)

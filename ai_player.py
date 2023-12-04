@@ -38,7 +38,7 @@ class AIPlayer(Player):
 
 
 
-    def pick_movement(self, ball_pos, player_angle, center):
+    """def pick_movement(self, ball_pos, player_angle, center):
 
         move = random.choice([self.move_left_towards_ball( ball_pos, player_angle, center),
                             self.move_right_towards_ball( ball_pos, player_angle, center),])
@@ -62,8 +62,43 @@ class AIPlayer(Player):
             move = 'STAY'
         else:
             move ='MOVE_RIGHT'
-        return move
-    
+        return move"""
+
+    """def move_towards_ball(self, ball_pos, player_angle, center):
+            target_angle = self._calculate_ball_angle(center, ball_pos)
+            self.calculate_position()  # Recalculate the position
+
+            choose_right = math.atan2(player_angle - target_angle, target_angle)
+            choose_left = math.atan2(target_angle - player_angle, player_angle)
+
+            if abs(player_angle - target_angle) <= 1:
+                move = 'STAY'
+            elif choose_right < choose_left:
+                move = 'MOVE_LEFT'
+                print(choose_left)
+                print(choose_right)
+            elif choose_left < choose_right:
+                move = 'MOVE_RIGHT'
+                print(choose_left)
+                print(choose_right)
+            return move"""
+
+    def move_towards_ball(self, ball_pos, player_angle, center):
+                target_angle = self._calculate_ball_angle(center, ball_pos)
+                self.calculate_position()  # Recalculate the position
+
+                choose_right = (player_angle - target_angle)
+                choose_left = (target_angle - player_angle)
+
+                if abs(player_angle - target_angle) <= 1:
+                    move = 'STAY'
+                elif choose_right < choose_left:
+                    move = 'MOVE_LEFT'
+                elif choose_left < choose_right:
+                    move = 'MOVE_RIGHT'
+                else:
+                    move = 'STAY'
+                return move
 
     def move_across_player(self, ball_pos, player_angle, center, player_with_posession_angle):
         target_angle = self._calculate_ball_angle(center, ball_pos)
