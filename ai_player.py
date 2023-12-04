@@ -1,4 +1,5 @@
 import math
+import random
 from player import Player
 from colors import *
 
@@ -35,34 +36,62 @@ class AIPlayer(Player):
         self.edge4_x = self.player_x - int(self.player_width / 2 * perp_vector_x)
         self.edge4_y = self.player_y - int(self.player_width / 2 * perp_vector_y)
 
-    def move_towards_ball(self, ball_pos):
+
+
+    def pick_movement(self, ball_pos, player_angle, center):
+
+        move = random.choice([self.move_left_towards_ball( ball_pos, player_angle, center),
+                            self.move_right_towards_ball( ball_pos, player_angle, center),])
+        return move
+
+    def move_left_towards_ball(self, ball_pos, player_angle, center):
+        target_angle = self._calculate_ball_angle(center, ball_pos)
         self.calculate_position()  # Recalculate the position
-
-        # Calculate the angle towards the ball
-        self.target_angle = math.degrees(math.atan2(ball_pos[1] - self.player_y, ball_pos[0] - self.player_x))
-
-        # Smoothly move towards the target angle
-        angle_difference = (self.target_angle - self.player_angle) % 360
-
-        if abs(angle_difference) <= 30:
-            self.player_angle = self.target_angle
+    
+        if abs(player_angle - target_angle) <= 5:
             move = 'STAY'
-        elif angle_difference > self.ai_speed:
-            self.player_angle = (self.player_angle + self.ai_speed) % 360
-            move = 'MOVE_LEFT'
         else:
-            self.player_angle = (self.player_angle - self.ai_speed) % 360
-            move = 'MOVE_RIGHT'
+            move ='MOVE_LEFT'
+        return move
 
+    def move_right_towards_ball(self, ball_pos, player_angle, center):
+        target_angle = self._calculate_ball_angle(center, ball_pos)
+        self.calculate_position()  # Recalculate the position
+    
+        if abs(player_angle - target_angle) <= 1:
+            move = 'STAY'
+        else:
+            move ='MOVE_RIGHT'
         return move
     
-    def calculate_new_position(ball_pos, slope, delta_x):
-        x, y = ball_pos
-        new_x = x + delta_x
-        new_y = y + slope * delta_x
-        return new_x, new_y
-        
-    def calculate_new_ball_position(self, ball_pos, delta_x):
-        slope = math.tan(math.radians(self.target_angle))  # Calculate slope using target_angle
-        new_ball_pos = self.calculate_new_position(ball_pos, slope, delta_x)
-        return new_ball_pos
+
+    def move_across_player(self, ball_pos, player_angle, center, player_with_posession_angle):
+        target_angle = self._calculate_ball_angle(center, ball_pos)
+        self.calculate_position()  # Recalculate the position
+
+        #go across from which ever player has possession
+        target_angle = (player_with_posession_angle + 180) % 360
+    
+        if abs(player_angle - target_angle) <= 1:
+            move = 'STAY'
+        else:
+            move ='MOVE_RIGHT'
+        return move
+
+    def _calculate_ball_angle(self, center, ball_pos):
+        dx = ball_pos[0] - center[0]
+        dy = ball_pos[1] - center[1]
+
+        # Use arctangent to calculate the angle in radians
+        angle_rad = math.atan2(dy, dx)
+
+        # Convert radians to degrees
+        angle_deg = math.degrees(angle_rad)
+
+        # Convert negative angles to positive equivalent in the custom format
+        if angle_deg < 0:
+            angle_deg = 360 + angle_deg
+
+        return angle_deg
+
+

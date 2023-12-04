@@ -17,15 +17,17 @@ font20 = pygame.font.Font('freesansbold.ttf', 20)
 WIDTH, HEIGHT = 900, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Circular Pong")
+center = (WIDTH // 2, HEIGHT // 2)
 
 clock = pygame.time.Clock()
 FPS = 30
 
 players = []
-how_many_real_players = 1  # up to 4
-how_many_ai_players = 0
+how_many_real_players = 0  # up to 4
+how_many_ai_players = 5
 total_players = how_many_ai_players + how_many_real_players
-who_can_hit = 0
+who_can_hit = 1 #starts on the first player
+player_speed = 3
 
 for player in range(how_many_real_players):
     player_angle = 360 / total_players * (player + 1)
@@ -53,14 +55,14 @@ player_angles = []
 
 
 # Create the Ball
-ball = Ball([WIDTH // 2, HEIGHT // 2], random.choice([[-3, -3], [3, 3], [-3, 3], [3, -3]]), 5, WIDTH, HEIGHT, screen)
+ball = Ball([WIDTH // 2, HEIGHT // 2], ball_speed, 5, WIDTH, HEIGHT, screen)
 
 def move_right(player_num):
-    players[player_num]['player_angle'] -= 5
+    players[player_num]['player_angle'] -= player_speed
     players[player_num]['player_angle'] %= 360
 
 def move_left(player_num):
-    players[player_num]['player_angle'] += 5
+    players[player_num]['player_angle'] += player_speed
     players[player_num]['player_angle'] %= 360
 
 def player_movement(keys):
@@ -92,13 +94,19 @@ while True:
     for index, player in enumerate(players):
         if(player['is_ai'] == True):
             ai_player = AIPlayer(player['player_angle'], player['player_length'], player['player_width'], WIDTH, HEIGHT, screen, RED if index == who_can_hit else WHITE)
-            move = ai_player.move_towards_ball(ball.ball_pos)
-            if(move == 'MOVE_RIGHT'):
-                move_right(index)
-            elif(move == 'MOVE_LEFT'):
-                move_left(index)
-            else:
-                pass
+            if(index == who_can_hit):
+                if(index % 2 == 0):
+                    move = ai_player.move_left_towards_ball(ball.ball_pos, ai_player.player_angle, center)
+                elif(index % 2 == 1):
+                    move = ai_player.move_right_towards_ball(ball.ball_pos, ai_player.player_angle, center)
+
+                if(move == 'MOVE_RIGHT'):
+                    move_right(index)
+                elif(move == 'MOVE_LEFT'):
+                    move_left(index)
+                else:
+                    pass
+            ai_player.calculate_position()
             ai_player.draw()
             if(index == who_can_hit):
                 player_positions.append(ai_player.get_position())

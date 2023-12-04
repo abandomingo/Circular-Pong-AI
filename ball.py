@@ -29,9 +29,6 @@ class Ball:
 
         # Draw the ball
         pygame.draw.circle(self.screen, RED, (int(self.ball_pos[0]), int(self.ball_pos[1])), self.ball_radius)
-        
-        print(self.ball_pos)
-        print(player_positions)
 
         # Check collision with the ball
         for index, player_cord in enumerate(player_positions):
