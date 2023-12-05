@@ -13,7 +13,7 @@ class Ball:
         self.HEIGHT = HEIGHT
         self.screen = screen
 
-    def update(self, player_positions, hit_count, is_hit, player_angles):
+    def update(self, player_positions, hit_count, is_hit, player_angles, ball_speed):
         # Update ball position
         hit_count = hit_count
         is_out = False
@@ -25,6 +25,7 @@ class Ball:
         if distance_to_center + self.ball_radius >= 250:  # If the ball is outside the circular boundary
             self.ball_pos[0] = self.WIDTH // 2
             self.ball_pos[1] = self.HEIGHT // 2
+            self.ball_speed = ball_speed
             is_out = True
 
         # Draw the ball

@@ -37,7 +37,7 @@ class AIPlayer(Player):
         self.edge4_y = self.player_y - int(self.player_width / 2 * perp_vector_y)
 
 
-
+    #FUTURE AI IMPLEMENTATIONS
     """def pick_movement(self, ball_pos, player_angle, center):
 
         move = random.choice([self.move_left_towards_ball( ball_pos, player_angle, center),
@@ -83,6 +83,7 @@ class AIPlayer(Player):
                 print(choose_right)
             return move"""
 
+    #BASIC PLAYER AI
     def move_towards_ball(self, ball_pos, player_angle, center):
                 target_angle = self._calculate_ball_angle(center, ball_pos)
                 self.calculate_position()  # Recalculate the position
@@ -99,19 +100,6 @@ class AIPlayer(Player):
                 else:
                     move = 'STAY'
                 return move
-
-    def move_across_player(self, ball_pos, player_angle, center, player_with_posession_angle):
-        target_angle = self._calculate_ball_angle(center, ball_pos)
-        self.calculate_position()  # Recalculate the position
-
-        #go across from which ever player has possession
-        target_angle = (player_with_posession_angle + 180) % 360
-    
-        if abs(player_angle - target_angle) <= 1:
-            move = 'STAY'
-        else:
-            move ='MOVE_RIGHT'
-        return move
 
     def _calculate_ball_angle(self, center, ball_pos):
         dx = ball_pos[0] - center[0]

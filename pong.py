@@ -24,10 +24,10 @@ FPS = 30
 
 players = []
 how_many_real_players = 1  # up to 4
-how_many_ai_players = 5
+how_many_ai_players = 4
 total_players = how_many_ai_players + how_many_real_players
 who_can_hit = 1 #starts on the first player
-player_speed = 3
+player_speed = 5
 
 for player in range(how_many_real_players):
     player_angle = 360 / total_players * (player + 1)
@@ -123,7 +123,7 @@ while True:
 
     player_angles = [player['player_angle'] for player in players]
 
-    is_hit, is_out = ball.update(player_positions, hit_count, is_hit, player_angles)
+    is_hit, is_out = ball.update(player_positions, hit_count, is_hit, player_angles, ball_speed)
 
     player_angles = []
     player_positions = []
@@ -133,10 +133,11 @@ while True:
         who_can_hit = (who_can_hit + 1) % (how_many_real_players + how_many_ai_players) 
 
     if(is_out):
-        ball_direction = random.choice([[-3, -3], [3, 3], [-3, 3], [3, -3], [0, .5], [.5, 0], [0, -.5], [-.5, 0]])
+        ball_direction = random.choice([[-3, -3], [3, 3], [-3, 3], [3, -3]])
         ball_speed = ball_direction
         hit_count = 0
-        who_can_hit = (who_can_hit + 1) % (how_many_real_players + how_many_ai_players)
+        if(how_many_real_players + how_many_ai_players > 0):
+            who_can_hit = (who_can_hit + 1) % (how_many_real_players + how_many_ai_players)
 
     # Display hit count
     hit_count_text = font20.render(f"Hit Count: {hit_count}", True, WHITE)
