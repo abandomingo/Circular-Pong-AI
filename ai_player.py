@@ -1,7 +1,7 @@
 import math
 import random
 from player import Player
-from colors import *
+from constants import *
 
 class AIPlayer(Player):
     def __init__(self, player_angle, player_length, player_width, WIDTH, HEIGHT, screen, color, is_ai=True, ai_speed=5):

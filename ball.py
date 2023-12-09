@@ -2,7 +2,7 @@ import pygame
 import sys
 import math
 import random
-from colors import *
+from constants import *
 
 class Ball:
     def __init__(self, ball_pos, ball_speed, ball_radius, WIDTH, HEIGHT, screen):
@@ -22,7 +22,8 @@ class Ball:
 
         # Check if the ball crosses the boundary of the circular play area
         distance_to_center = math.sqrt((self.ball_pos[0] - self.WIDTH // 2) ** 2 + (self.ball_pos[1] - self.HEIGHT // 2) ** 2)
-        if distance_to_center + self.ball_radius >= 250:  # If the ball is outside the circular boundary
+        if distance_to_center + self.ball_radius >= radius:  # If the ball is outside the circular boundary
+            #reset ball position
             self.ball_pos[0] = self.WIDTH // 2
             self.ball_pos[1] = self.HEIGHT // 2
             self.ball_speed = ball_speed
@@ -45,22 +46,22 @@ class Ball:
                 self.ball_pos[1] >= min(edge1_y, edge2_y, edge3_y, edge4_y) and
                 not is_hit
                 ):
-                self.handle_collision(player_angles[index], hit_count)
+                self._handle_collision(player_angles[index], hit_count)
                 return True, is_out
 
         return False, is_out
 
-    def handle_collision(self, player_angle, hit_count):
+    def _handle_collision(self, player_angle, hit_count):
         if 0 < player_angle <= 90:
-            self.reflect_ball(1, 1, hit_count)
+            self._reflect_ball(1, 1, hit_count)
         elif 90 < player_angle <= 180:
-            self.reflect_ball(-1, 1, hit_count)
+            self._reflect_ball(-1, 1, hit_count)
         elif 180 < player_angle <= 270:
-            self.reflect_ball(-1, -1, hit_count)
+            self._reflect_ball(-1, -1, hit_count)
         elif 270 < player_angle <= 360:
-            self.reflect_ball(1, -1, hit_count)
+            self._reflect_ball(1, -1, hit_count)
 
-    def reflect_ball(self, x_direction, y_direction, hit_count):
+    def _reflect_ball(self, x_direction, y_direction, hit_count):
         speed_factor = random.choice([2, 3, 4]) + (hit_count/4)
         self.ball_speed[0] = x_direction * abs(speed_factor)
         speed_factor = random.choice([2, 3, 4]) + (hit_count/4)

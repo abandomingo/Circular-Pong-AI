@@ -6,56 +6,38 @@ from arena import Arena
 from ball import Ball
 from player import Player
 from ai_player import AIPlayer
-from colors import *
+from constants import *
 
 pygame.init()
 
 # Font that is used to render the text
 font20 = pygame.font.Font('freesansbold.ttf', 20)
-
-# Basic parameters of the screen
-WIDTH, HEIGHT = 900, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Circular Pong")
-center = (WIDTH // 2, HEIGHT // 2)
-
 clock = pygame.time.Clock()
-FPS = 30
 
 players = []
-how_many_real_players = 1  # up to 4
-how_many_ai_players = 4
 total_players = how_many_ai_players + how_many_real_players
-who_can_hit = 1 #starts on the first player
-player_speed = 5
 
+
+#Create the players with basic 
 for player in range(how_many_real_players):
     player_angle = 360 / total_players * (player + 1)
-    player_length = 10
-    player_width = 50
     players.append({'player_angle': player_angle, 'player_length': player_length, 'player_width': player_width,  'is_ai': False})
 
 for player in range(how_many_ai_players):
     player_angle = 360 / total_players * (player + how_many_real_players)
-    player_length = 10
-    player_width = 50
     players.append({'player_angle': player_angle, 'player_length': player_length, 'player_width': player_width, 'is_ai': True})
 
 
-ball_pos = [WIDTH // 2, HEIGHT // 2]
-ball_speed = random.choice([[-3, -3], [3, 3], [-3, 3], [3, -3]])
-ball_radius = 5
 
-# Initialize hit count
-hit_count = 0
-is_hit = False
+ball_speed = random.choice([[-3, -3], [3, 3], [-3, 3], [3, -3]])
 
 player_positions = []
 player_angles = []
 
-
-# Create the Ball
-ball = Ball([WIDTH // 2, HEIGHT // 2], ball_speed, 5, WIDTH, HEIGHT, screen)
+# Initialize the Ball
+ball = Ball(ball_pos, ball_speed, 5, WIDTH, HEIGHT, screen)
 
 def move_right(player_num):
     players[player_num]['player_angle'] -= player_speed
